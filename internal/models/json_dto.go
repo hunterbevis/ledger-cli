@@ -3,7 +3,7 @@ package models
 // JSONTransactionDTO represents the string-based format for the JSON output.
 type JSONTransactionDTO struct {
 	Date    string `json:"date"`
-	Amount  string `json:"amount"` // Per sample: amount is a string.
+	Amount  string `json:"amount"`
 	Content string `json:"content"`
 }
 

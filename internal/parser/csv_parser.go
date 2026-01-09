@@ -19,6 +19,7 @@ func NewCSVParser() Parser {
 }
 
 func (p *csvParser) Parse(path string) ([]models.Transaction, error) {
+	
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to open file: %w", err)
