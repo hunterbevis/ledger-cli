@@ -6,14 +6,14 @@ import (
 	"os"
 
 	"github.com/hunterbevis/ledger-cli/internal/formatter"
+	"github.com/hunterbevis/ledger-cli/internal/logging"
 	"github.com/hunterbevis/ledger-cli/internal/parser"
 	"github.com/hunterbevis/ledger-cli/internal/processor"
 )
 
 func main() {
-
-	period := flag.String("period", "", "The target month in YYYYMM format (e.g., 200601).")
-	filePath := flag.String("file", "", "The path to the CSV transaction file.")
+	period := flag.String("period", "", "the target month in YYYYMM format (e.g., 200601).")
+	filePath := flag.String("file", "", "the path to the transaction file.")
 	flag.Parse()
 
 	if *period == "" || *filePath == "" {
@@ -21,24 +21,24 @@ func main() {
 		os.Exit(1)
 	}
 
-	p := parser.NewCSVParser()
+	rep := logging.NewStandardReporter()
+
+	p := parser.NewCSVParser(rep)
+
 	transactions, err := p.Parse(*filePath)
 	if err != nil {
-		fmt.Printf("Error parsing file: %v\n", err)
 		os.Exit(1)
 	}
 
-	proc := processor.NewProcessor()
+	proc := processor.NewProcessor(rep)
 	statement, err := proc.Process(transactions, *period)
 	if err != nil {
-		fmt.Printf("Error processing data: %v\n", err)
 		os.Exit(1)
 	}
 
-	f := formatter.NewJSONFormatter()
+	f := formatter.NewJSONFormatter(rep)
 	output, err := f.Format(statement)
 	if err != nil {
-		fmt.Printf("Error formatting output: %v\n", err)
 		os.Exit(1)
 	}
 
